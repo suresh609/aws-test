@@ -1,20 +1,17 @@
 name: Datadog Integration
-
-on:
+'on':
   push:
     branches:
       - main
-
 jobs:
   notify-datadog:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Notify Datadog about deployment
+      - name: Send custom metric to Datadog      
         run: |
-          curl -X POST "https://api.datadoghq.eu/api/v1/events" \
+          curl -X POST "https://api.datadoghq.com/api/v1/series" \
           -H "Content-Type: application/json" \
           -H "DD-API-KEY: ${{ secrets.DATADOG_API_KEY }}" \
           -d '{
@@ -24,5 +21,4 @@ jobs:
             "type": "gauge",
             "tags": ["environment:production"]
           }]
-          }
-     
+          }'
