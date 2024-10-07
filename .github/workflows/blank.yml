@@ -30,7 +30,8 @@ jobs:
 
       # Step 5: Enable Datadog CI Visibility with tracing
       - name: Send CI data to Datadog
-        uses: datadog/ci-visibility-github-action@v2
+        uses: datadog-ci/ci-visibility-action@v2
+        
         with:
           datadog-api-key: ${{ secrets.DATADOG_API_KEY }}
           service: github-ci-pipeline
