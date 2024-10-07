@@ -18,10 +18,11 @@ jobs:
           -H "Content-Type: application/json" \
           -H "DD-API-KEY: ${{ secrets.DATADOG_API_KEY }}" \
           -d '{
-                "title": "Deployment Notification",
-                "text": "A new deployment has been made to the main branch.",
-                "priority": "normal",
-                "tags": ["environment:production"]
-              }'
-        env:
-          DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
+          "series": [{
+            "metric": "my.custom.metric",
+            "points": [[$(date +%s), 1]],
+            "type": "gauge",
+            "tags": ["environment:production"]
+          }]
+          }
+     
