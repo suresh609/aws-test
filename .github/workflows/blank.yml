@@ -1,4 +1,4 @@
-name: Test Action
+name: Datadog Integration
 
 on:
   push:
@@ -6,15 +6,22 @@ on:
       - main
 
 jobs:
-  test:
+  notify-datadog:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Hello World
-        run: echo "Hello, World!"
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'     
+      - name: Notify Datadog about deployment
+        run: |
+          curl -X POST "https://api.datadoghq.eu/api/v1/events" \
+          -H "Content-Type: application/json" \
+          -H "DD-API-KEY: ${{ secrets.DATADOG_API_KEY }}" \
+          -d '{
+                "title": "Deployment Notification",
+                "text": "A new deployment has been made to the main branch.",
+                "priority": "normal",
+                "tags": ["environment:production"]
+              }'
+        env:
+          DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
