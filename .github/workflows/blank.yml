@@ -18,6 +18,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16'
-          
-      - name: Install dependencies
-        run: npm install
+      
+      - name: Send CI data to Datadog
+        uses: datadog-ci/ci-visibility-action@v2
+        with:
+          datadog-api-key: "20554c3e044b04aa7351f90c7fbafcca"
+          service: github-ci-pipeline
+          environment: production
+          site: datadoghq.eu
