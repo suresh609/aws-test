@@ -1,31 +1,16 @@
-name: CI Pipeline
+name: Test Action
 
 on:
   push:
     branches:
       - main
-  pull_request:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Check out the repository
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up environment (Node.js, Python, etc.)
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'         
-
-     # Step 5: Enable Datadog CI Visibility with tracing
-      - name: Send CI data to Datadog
-        uses: datadog-ci/ci-visibility-action@v2
-        
-        with:
-          datadog-api-key: ${{ secrets.DATADOG_API_KEY }}
-          service: github-ci-pipeline
-          environment: production
-          site: datadoghq.eu  # Use 'datadoghq.eu' for EU users
+      - name: Hello World
+        run: echo "Hello, World!"
