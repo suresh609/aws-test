@@ -1,4 +1,4 @@
-name: CI Pipeline with Datadog Tracing
+name: CI Pipeline
 
 on:
   push:
