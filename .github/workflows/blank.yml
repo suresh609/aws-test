@@ -35,4 +35,4 @@ jobs:
           datadog-api-key: ${{ secrets.DATADOG_API_KEY }}
           service: github-ci-pipeline
           environment: production
-          site: datadoghq.com  # Use 'datadoghq.eu' for EU users
+          site: datadoghq.eu  # Use 'datadoghq.eu' for EU users
