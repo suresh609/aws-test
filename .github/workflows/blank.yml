@@ -21,7 +21,7 @@ jobs:
           DATADOG_SITE: "datadoghq.eu"  # Use datadoghq.eu if in EU region
           GIT_BRANCH: ${{ github.ref_name }}
         run: |
-          curl -X POST "https://api.datadoghq.com/api/v2/ci/tests" \
+          curl -X POST "https://api.datadoghq.eu/api/v2/ci/tests" \
             -H "DD-API-KEY: $DATADOG_API_KEY" \
             -H "Content-Type: application/json" \
             -d '{
