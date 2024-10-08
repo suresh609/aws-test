@@ -1,27 +1,44 @@
-name: Datadog Integration
-'on':
+name: CI Pipeline with Datadog Integration
+
+on:
   push:
     branches:
       - main
-jobs:
-  notify-datadog:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Send custom metric to Datadog      
-        run: |
-          curl -X POST "https://api.datadoghq.eu/api/v1/series" \
-          -H "Content-Type: application/json" \
-          -H "DD-API-KEY: ${{ secrets.DATADOG_API_KEY }}" \
-          -d '{
-          "series": [{
-            "metric": "my.custom.metric",
-            "points": [[$(date +%s), 1]],
-            "type": "gauge",
-            "tags": ["environment:production"]
-          }]
-          }'
+      - develop
+      - feature/*
 
-          
-          
+jobs:
+  report-to-datadog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Datadog CI Visibility
+        env:
+          DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
+          DATADOG_SITE: "datadoghq.eu"  # Use datadoghq.eu if in EU region
+          GIT_BRANCH: ${{ github.ref_name }}
+        run: |
+          curl -X POST "https://api.datadoghq.com/api/v2/ci/tests" \
+            -H "DD-API-KEY: $DATADOG_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+                  "data": {
+                      "type": "test_cycle",
+                      "attributes": {
+                          "name": "GitHub Actions CI",
+                          "status": "passed",
+                          "branch": "'${GIT_BRANCH}'",
+                          "pipeline_id": "'${{ github.run_id }}'",
+                          "pipeline_url": "'${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'",
+                          "ci_env": "github_actions"
+                      }
+                  }
+              }'
+
+      - name: Run Tests
+        run: |
+          echo "Running tests..."
+          # Add your test commands here
